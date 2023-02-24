@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky install && npx husky add .husky/pre-commit \"npx lint-staged\"  &&  npx husky add .husky/commit-msg \"npx --no-install commitlint --edit $1\" ",
     "build:commonjs": "tsc --project tsconfig.commonjs.json",
     "build:es": "tsc --project tsconfig.es.json",
     "uglify": "npx  uglifyjs dist/es/index.js -o dist/es/index.min.js --compress --mangle & npx  uglifyjs dist/commonjs/index.js -o dist/commonjs/index.min.js --compress --mangle ",
@@ -46,12 +46,6 @@
   },
   "dependencies": {
    
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "npx --no-install commitlint --edit $1"
-    }
   },
   "lint-staged": {
     "*.ts": [
