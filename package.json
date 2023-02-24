@@ -2,15 +2,63 @@
   "name": "my-toolbox",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/commonjs/index.min.js",
+  "module": "dist/es/index.min.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepare": "husky install",
+    "build:commonjs": "tsc --project tsconfig.commonjs.json",
+    "build:es": "tsc --project tsconfig.es.json",
+    "uglify": "npx  uglifyjs dist/es/index.js -o dist/es/index.min.js --compress --mangle & npx  uglifyjs dist/commonjs/index.js -o dist/commonjs/index.min.js --compress --mangle ",
+    "build": "npm run build:commonjs & npm run build:es & npm run uglify",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint 'src/**/*.{js,ts}' --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "cm":"git-cz"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.34.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "prettier": "^2.8.4",
     "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "uglify-js": "^3.17.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "npx --no-install commitlint --edit $1"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }
